@@ -82,6 +82,8 @@ namespace NuGet.Commands.Test
             }
         }
 
+        // Skip the tests when signing is not supported.
+#if IS_SIGNING_SUPPORTED
         [Fact]
         public async Task ExecuteCommandAsync_WithExistingCertificateFromPathAndNoPassword_Succeed()
         {
@@ -205,6 +207,7 @@ namespace NuGet.Commands.Test
                 }
             }
         }
+#endif
 
         [Fact]
         public async Task ExecuteCommandAsync_WithAmbiguousMatch_ThrowsAsync()
