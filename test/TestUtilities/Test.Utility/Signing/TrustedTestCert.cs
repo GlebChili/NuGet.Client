@@ -66,15 +66,24 @@ namespace Test.Utility.Signing
                 throw new InvalidOperationException($"The certificate used is valid for more than {maximumValidityPeriod}.");
             }
 #endif
-            if (RuntimeEnvironmentHelper.IsMacOSX)
+            // According to https://github.com/dotnet/runtime/blob/master/docs/design/features/cross-platform-cryptography.md#x509store,
+            // on macOS, when StoreName = Root, the X509Store is not read-only, writing will throw CryptographicException.
+            // But when StoreName = My, the X509Store is read/write.
+            // For other StoreNames, we haven't used in our tests. 
+            if (RuntimeEnvironmentHelper.IsMacOSX && storeName == StoreName.Root)
             {
                 AddCertificateToStoreForMacOSX();
             }
-            else
+            else if ((RuntimeEnvironmentHelper.IsMacOSX && storeName == StoreName.My) || !RuntimeEnvironmentHelper.IsMacOSX)
             {
                 StoreName = storeName;
                 StoreLocation = storeLocation;
                 AddCertificateToStore();
+            }
+            else
+            {
+                var message = $@"Adding {storeName} on macOS is not yet supported in our test. Pls implement it using command if you want to"; 
+                throw new Exception(message);
             }
 
             ExportCrl();
