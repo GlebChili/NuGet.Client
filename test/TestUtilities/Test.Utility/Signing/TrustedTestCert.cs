@@ -70,11 +70,11 @@ namespace Test.Utility.Signing
             // on macOS, when StoreName = Root, the X509Store is not read-only, writing will throw CryptographicException.
             // But when StoreName = My, the X509Store is read/write.
             // For other StoreNames, we haven't used in our tests. 
-            if (RuntimeEnvironmentHelper.IsMacOSX && storeName == StoreName.Root)
+            if (RuntimeEnvironmentHelper.IsMacOSX && storeName.Equals(StoreName.Root))
             {
                 AddCertificateToStoreForMacOSX();
             }
-            else if ((RuntimeEnvironmentHelper.IsMacOSX && storeName == StoreName.My) || !RuntimeEnvironmentHelper.IsMacOSX)
+            else if ((RuntimeEnvironmentHelper.IsMacOSX && storeName.Equals(StoreName.My)) || !RuntimeEnvironmentHelper.IsMacOSX)
             {
                 StoreName = storeName;
                 StoreLocation = storeLocation;
