@@ -9,6 +9,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using NuGet.Common;
 using NuGet.Configuration;
+#if NET5_0_OR_GREATER
+using System.Runtime.Versioning;
+#endif
 
 namespace NuGet.Protocol
 {
@@ -16,6 +19,9 @@ namespace NuGet.Protocol
     /// A message handler responsible for retrying request for authenticated proxies
     /// with missing credentials.
     /// </summary>
+#if NET5_0_OR_GREATER
+        [UnsupportedOSPlatform("browser")]
+#endif
     public class ProxyAuthenticationHandler : DelegatingHandler
     {
         public static readonly int MaxAuthRetries = 3;

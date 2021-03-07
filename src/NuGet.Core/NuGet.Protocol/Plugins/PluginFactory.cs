@@ -10,6 +10,9 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+#if NET5_0_OR_GREATER
+using System.Runtime.Versioning;
+#endif
 
 
 namespace NuGet.Protocol.Plugins
@@ -17,6 +20,9 @@ namespace NuGet.Protocol.Plugins
     /// <summary>
     /// A plugin factory.
     /// </summary>
+#if NET5_0_OR_GREATER
+        [UnsupportedOSPlatform("browser")]
+#endif
     public sealed class PluginFactory : IPluginFactory
     {
         private bool _isDisposed;

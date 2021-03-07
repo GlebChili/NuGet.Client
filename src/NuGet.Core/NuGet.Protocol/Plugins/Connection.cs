@@ -5,12 +5,18 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using NuGet.Versioning;
+#if NET5_0_OR_GREATER
+using System.Runtime.Versioning;
+#endif
 
 namespace NuGet.Protocol.Plugins
 {
     /// <summary>
     /// Represents a bidirectional channel between a NuGet client and a plugin.
     /// </summary>
+#if NET5_0_OR_GREATER
+        [UnsupportedOSPlatform("browser")]
+#endif
     public sealed class Connection : IConnection
     {
         private bool _isDisposed;

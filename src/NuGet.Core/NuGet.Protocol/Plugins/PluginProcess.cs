@@ -4,12 +4,18 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+#if NET5_0_OR_GREATER
+using System.Runtime.Versioning;
+#endif
 
 namespace NuGet.Protocol.Plugins
 {
     /// <summary>
     /// Represents a plugin process.
     /// </summary>
+ #if NET5_0_OR_GREATER
+    [UnsupportedOSPlatform("browser")]
+#endif
     public sealed class PluginProcess : IPluginProcess
     {
         private int? _exitCode;

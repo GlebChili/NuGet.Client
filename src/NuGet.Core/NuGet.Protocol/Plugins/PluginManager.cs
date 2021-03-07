@@ -15,6 +15,9 @@ using NuGet.Configuration;
 using NuGet.Packaging;
 using NuGet.Protocol.Core.Types;
 using NuGet.Shared;
+#if NET5_0_OR_GREATER
+using System.Runtime.Versioning;
+#endif
 
 namespace NuGet.Protocol.Plugins
 {
@@ -22,6 +25,9 @@ namespace NuGet.Protocol.Plugins
     /// A plugin manager. This manages all the live plugins and their operation claims.
     /// Invoked in by both the credential provider and the PluginResourceProvider
     /// </summary>
+#if NET5_0_OR_GREATER
+    [UnsupportedOSPlatform("browser")]
+#endif
     public sealed class PluginManager : IPluginManager, IDisposable
     {
         private static readonly Lazy<IPluginManager> _lazy = new Lazy<IPluginManager>(() => new PluginManager());

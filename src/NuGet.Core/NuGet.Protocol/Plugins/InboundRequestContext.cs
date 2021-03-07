@@ -4,12 +4,18 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+#if NET5_0_OR_GREATER
+using System.Runtime.Versioning;
+#endif
 
 namespace NuGet.Protocol.Plugins
 {
     /// <summary>
     /// Context for an inbound request.
     /// </summary>
+#if NET5_0_OR_GREATER
+        [UnsupportedOSPlatform("browser")]
+#endif
     public sealed class InboundRequestContext : IDisposable
     {
         private readonly CancellationToken _cancellationToken;

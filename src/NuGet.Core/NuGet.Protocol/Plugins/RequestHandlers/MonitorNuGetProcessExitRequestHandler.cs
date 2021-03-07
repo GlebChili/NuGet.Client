@@ -6,12 +6,18 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+#if NET5_0_OR_GREATER
+using System.Runtime.Versioning;
+#endif
 
 namespace NuGet.Protocol.Plugins
 {
     /// <summary>
     /// A request handler for monitoring the exit of a NuGet process.
     /// </summary>
+#if NET5_0_OR_GREATER
+    [UnsupportedOSPlatform("browser")]
+#endif
     public sealed class MonitorNuGetProcessExitRequestHandler : IRequestHandler, IDisposable
     {
         private bool _isDisposed;

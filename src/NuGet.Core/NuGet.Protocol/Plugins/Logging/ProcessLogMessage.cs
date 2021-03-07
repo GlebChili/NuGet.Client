@@ -4,9 +4,15 @@
 using System;
 using System.Diagnostics;
 using Newtonsoft.Json.Linq;
+#if NET5_0_OR_GREATER
+using System.Runtime.Versioning;
+#endif
 
 namespace NuGet.Protocol.Plugins
 {
+#if NET5_0_OR_GREATER
+        [UnsupportedOSPlatform("browser")]
+#endif
     internal sealed class ProcessLogMessage : PluginLogMessage
     {
         private readonly int _processId;

@@ -67,7 +67,7 @@ namespace NuGet.Protocol
             // HTTP handler pipeline can be injected here, around the client handler
             HttpMessageHandler messageHandler = new ServerWarningLogHandler(clientHandler);
 
-            if (proxy != null)
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Create("browser")) && proxy != null)
             {
                 messageHandler = new ProxyAuthenticationHandler(clientHandler, HttpHandlerResourceV3.CredentialService?.Value, ProxyCache.Instance);
             }
@@ -82,6 +82,7 @@ namespace NuGet.Protocol
                 };
             }
 #endif
+            if(!RuntimeInformation.IsOSPlatform(OSPlatform.Create("browser")))
             {
                 var innerHandler = messageHandler;
 

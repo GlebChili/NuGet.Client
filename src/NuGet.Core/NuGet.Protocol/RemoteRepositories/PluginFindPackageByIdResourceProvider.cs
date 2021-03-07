@@ -6,6 +6,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using NuGet.Protocol.Core.Types;
 using NuGet.Protocol.Plugins;
+using System.Runtime.InteropServices;
+#if NET5_0_OR_GREATER
+using System.Runtime.Versioning;
+#endif
 
 namespace NuGet.Protocol
 {
@@ -47,26 +51,29 @@ namespace NuGet.Protocol
 
             PluginFindPackageByIdResource resource = null;
 
-            var pluginResource = await source.GetResourceAsync<PluginResource>(cancellationToken);
-
-            if (pluginResource != null)
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Create("browser")))
             {
-                var serviceIndexResource = await source.GetResourceAsync<ServiceIndexResourceV3>(cancellationToken);
-                var httpHandlerResource = await source.GetResourceAsync<HttpHandlerResource>(cancellationToken);
+                var pluginResource = await source.GetResourceAsync<PluginResource>(cancellationToken);
 
-                if (serviceIndexResource != null && httpHandlerResource != null)
+                if (pluginResource != null)
                 {
-                    var result = await pluginResource.GetPluginAsync(OperationClaim.DownloadPackage, cancellationToken);
+                    var serviceIndexResource = await source.GetResourceAsync<ServiceIndexResourceV3>(cancellationToken);
+                    var httpHandlerResource = await source.GetResourceAsync<HttpHandlerResource>(cancellationToken);
 
-                    if (result != null)
+                    if (serviceIndexResource != null && httpHandlerResource != null)
                     {
-                        AddOrUpdateGetCredentialsRequestHandler(result.Plugin, source, httpHandlerResource);
-                        AddOrUpdateGetServiceIndexRequestHandler(result.Plugin, source);
+                        var result = await pluginResource.GetPluginAsync(OperationClaim.DownloadPackage, cancellationToken);
 
-                        resource = new PluginFindPackageByIdResource(
-                            result.Plugin,
-                            result.PluginMulticlientUtilities,
-                            source.PackageSource);
+                        if (result != null)
+                        {
+                            AddOrUpdateGetCredentialsRequestHandler(result.Plugin, source, httpHandlerResource);
+                            AddOrUpdateGetServiceIndexRequestHandler(result.Plugin, source);
+
+                            resource = new PluginFindPackageByIdResource(
+                                result.Plugin,
+                                result.PluginMulticlientUtilities,
+                                source.PackageSource);
+                        }
                     }
                 }
             }
@@ -74,6 +81,9 @@ namespace NuGet.Protocol
             return new Tuple<bool, INuGetResource>(resource != null, resource);
         }
 
+#if NET5_0_OR_GREATER
+        [UnsupportedOSPlatform("browser")]
+#endif
         private static void AddOrUpdateGetCredentialsRequestHandler(
             IPlugin plugin,
             SourceRepository source,

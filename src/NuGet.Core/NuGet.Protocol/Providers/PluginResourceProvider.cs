@@ -6,6 +6,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using NuGet.Protocol.Plugins;
+#if NET5_0_OR_GREATER
+using System.Runtime.Versioning;
+#endif
 
 namespace NuGet.Protocol.Core.Types
 {
@@ -13,6 +16,9 @@ namespace NuGet.Protocol.Core.Types
     /// A plugin resource provider.
     /// </summary>
     /// <remarks>This is unsealed only to facilitate testing.</remarks>
+#if NET5_0_OR_GREATER
+        [UnsupportedOSPlatform("browser")]
+#endif
     public class PluginResourceProvider : ResourceProvider
     {
         private readonly IPluginManager _pluginManager;

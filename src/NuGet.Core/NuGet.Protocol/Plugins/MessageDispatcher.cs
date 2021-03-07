@@ -6,6 +6,9 @@ using System.Collections.Concurrent;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
+#if NET5_0_OR_GREATER
+using System.Runtime.Versioning;
+#endif
 
 namespace NuGet.Protocol.Plugins
 {
@@ -13,6 +16,9 @@ namespace NuGet.Protocol.Plugins
     /// A message dispatcher that maintains state for outstanding requests
     /// and routes messages to configured request handlers.
     /// </summary>
+#if NET5_0_OR_GREATER
+    [UnsupportedOSPlatform("browser")]
+#endif
     public sealed class MessageDispatcher : IMessageDispatcher, IResponseHandler
     {
         private IConnection _connection;

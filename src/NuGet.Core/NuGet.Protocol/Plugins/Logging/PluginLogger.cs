@@ -5,9 +5,15 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using NuGet.Common;
+#if NET5_0_OR_GREATER
+using System.Runtime.Versioning;
+#endif
 
 namespace NuGet.Protocol.Plugins
 {
+#if NET5_0_OR_GREATER
+        [UnsupportedOSPlatform("browser")]
+#endif
     internal sealed class PluginLogger : IPluginLogger
     {
         private bool _isDisposed;

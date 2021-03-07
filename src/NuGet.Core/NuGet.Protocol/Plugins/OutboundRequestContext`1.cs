@@ -6,6 +6,9 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
+#if NET5_0_OR_GREATER
+using System.Runtime.Versioning;
+#endif
 
 namespace NuGet.Protocol.Plugins
 {
@@ -13,6 +16,9 @@ namespace NuGet.Protocol.Plugins
     /// Context for an outbound request.
     /// </summary>
     /// <typeparam name="TResult">The response payload type.</typeparam>
+#if NET5_0_OR_GREATER
+    [UnsupportedOSPlatform("browser")]
+#endif
     public sealed class OutboundRequestContext<TResult> : OutboundRequestContext
     {
         private readonly CancellationTokenSource _cancellationTokenSource;

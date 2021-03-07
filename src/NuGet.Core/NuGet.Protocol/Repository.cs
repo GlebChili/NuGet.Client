@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NuGet.Configuration;
 using NuGet.Protocol.LocalRepositories;
+using System.Runtime.InteropServices;
 
 namespace NuGet.Protocol.Core.Types
 {
@@ -77,7 +78,12 @@ namespace NuGet.Protocol.Core.Types
                 yield return new Lazy<INuGetResourceProvider>(() => new PackageMetadataResourceV3Provider());
                 yield return new Lazy<INuGetResourceProvider>(() => new AutoCompleteResourceV2FeedProvider());
                 yield return new Lazy<INuGetResourceProvider>(() => new AutoCompleteResourceV3Provider());
-                yield return new Lazy<INuGetResourceProvider>(() => new PluginResourceProvider());
+                if (!RuntimeInformation.IsOSPlatform(OSPlatform.Create("browser")))
+                {
+#pragma warning disable CA1416
+                    yield return new Lazy<INuGetResourceProvider>(() => new PluginResourceProvider());
+#pragma warning restore CA1416
+                }
                 yield return new Lazy<INuGetResourceProvider>(() => new RepositorySignatureResourceProvider());
 
                 // Local repository providers

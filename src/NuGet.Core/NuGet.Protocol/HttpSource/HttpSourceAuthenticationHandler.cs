@@ -11,9 +11,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using NuGet.Common;
 using NuGet.Configuration;
+#if NET5_0_OR_GREATER
+using System.Runtime.Versioning;
+#endif
 
 namespace NuGet.Protocol
 {
+#if NET5_0_OR_GREATER
+        [UnsupportedOSPlatform("browser")]
+#endif
     public class HttpSourceAuthenticationHandler : DelegatingHandler
     {
         public static readonly int MaxAuthRetries = AmbientAuthenticationState.MaxAuthRetries;
