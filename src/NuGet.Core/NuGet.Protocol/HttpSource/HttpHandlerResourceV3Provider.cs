@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using NuGet.Configuration;
 using NuGet.Protocol.Core.Types;
+using System.Runtime.InteropServices;
 
 namespace NuGet.Protocol
 {
@@ -41,15 +42,24 @@ namespace NuGet.Protocol
             var sourceUri = packageSource.SourceUri;
             var proxy = ProxyCache.Instance.GetProxy(sourceUri);
 
-            // replace the handler with the proxy aware handler
-            var clientHandler = new HttpClientHandler
+            HttpClientHandler clientHandler;
+
+            // replace the handler with the proxy aware handler if not in browser
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Create("browser")))
             {
-                Proxy = proxy,
-                AutomaticDecompression = (DecompressionMethods.GZip | DecompressionMethods.Deflate)
-            };
+                clientHandler = new HttpClientHandler
+                {
+                    Proxy = proxy,
+                    AutomaticDecompression = (DecompressionMethods.GZip | DecompressionMethods.Deflate)
+                };
+            }
+            else
+            {
+                clientHandler = new HttpClientHandler();
+            }
 
             // Setup http client handler client certificates
-            if (packageSource.ClientCertificates != null)
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Create("browser")) && packageSource.ClientCertificates != null)
             {
                 clientHandler.ClientCertificates.AddRange(packageSource.ClientCertificates.ToArray());
             }
