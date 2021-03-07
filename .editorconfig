@@ -139,3 +139,6 @@ dotnet_naming_symbols.private_field_symbols.applicable_accessibilities = private
 dotnet_naming_rule.private_field_rule.severity = warning
 dotnet_naming_rule.private_field_rule.symbols  = private_field_symbols
 dotnet_naming_rule.private_field_rule.style = private_member_style
+
+; Enable Platform compatibility analyzer
+dotnet_code_quality.enable_platform_analyzer_on_pre_net5_target=true
